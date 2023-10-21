@@ -1,0 +1,3 @@
+[submodule "qbLinAlg"]
+	path = qbLinAlg
+	url = https://github.com/QuantitativeBytes/qbLinAlg.git
