@@ -39,7 +39,7 @@ namespace qbRT{
         // function to print transform matrices to stdout
         void PrintMatrix(bool dirFlag);
 
-        static void PrintVecotr(const qbVector<double> &vector);
+        static void PrintVector(const qbVector<double> &vector);
     private:
         void Print(const qbMatrix2<double> &matrix); 
     private:

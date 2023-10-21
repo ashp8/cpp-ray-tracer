@@ -2,6 +2,7 @@
 #define RAYTRACING_OBJSPHERE_H
 
 #include "./objectbase.h"
+#include "gtfm.h"
 
 namespace qbRT{
     class ObjSphere : public ObjectBase{
@@ -12,7 +13,7 @@ namespace qbRT{
         ObjSphere();
         virtual ~ObjSphere() override;
 
-        virtual bool TestIntersection(const qbRT::Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor);
+        virtual bool TestIntersection(const qbRT::Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor) override;
 
     private:
 

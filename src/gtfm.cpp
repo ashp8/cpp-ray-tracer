@@ -95,5 +95,78 @@ qbRT::Ray qbRT::GTform::Apply(const qbRT::Ray &inputRay, bool dirFlag){
 }
 
 
+qbVector<double> qbRT::GTform::Apply(const qbVector<double> &inputVector, bool dirFlag){
+    const std::vector<double> tempData {
+        inputVector.GetElement(0),
+        inputVector.GetElement(1),
+        inputVector.GetElement(2), 1.0};
+    qbVector<double> tempVector {tempData};
+    
+    qbVector<double> resultVector;
+    if(dirFlag){
+        resultVector = m_fwdtfm * tempVector;
+    }else{
+        resultVector = m_bcktfm * tempVector;
+    }
 
-// # In this place last time
+    qbVector<double> outPutVector {std::vector<double> {
+        resultVector.GetElement(0), 
+        resultVector.GetElement(1), 
+        resultVector.GetElement(2)}};
+    return outPutVector;
+}
+
+
+
+
+// Overload Operators
+namespace qbRT{
+    qbRT::GTform operator* (const qbRT::GTform &lhs, const qbRT::GTform &rhs){
+        // form the product of the two forward transform
+        qbMatrix2<double> fwdResult = lhs.m_fwdtfm * rhs.m_fwdtfm;
+
+        // compute backward transform as the inverse of the forward transform
+        qbMatrix2<double> bckResult = fwdResult;
+        bckResult.Inverse();
+
+        qbRT::GTform finalResult (fwdResult, bckResult);
+        return finalResult;
+    }
+};
+
+qbRT::GTform qbRT::GTform::operator= (const qbRT::GTform &rhs){
+    // make sure not to assign self
+    if(this != &rhs){
+        m_fwdtfm = rhs.m_fwdtfm;
+        m_bcktfm = rhs.m_bcktfm;
+    }
+    return *this;
+}
+
+// Function to Print the transform Matrix to stdout
+//
+void qbRT::GTform::PrintMatrix(bool dirFlag){
+    if(dirFlag)
+        Print(m_fwdtfm);
+    else
+        Print(m_bcktfm);
+}
+
+void qbRT::GTform::Print(const qbMatrix2<double> &matrix){
+    int nRows = matrix.GetNumRows();
+    int nCols = matrix.GetNumCols();
+
+    for(int row = 0; row < nRows; ++row){
+        for(int col = 0; col < nCols; ++col){
+            std::cout << std::fixed << std::setprecision(3) << matrix.GetElement(row,col) << " ";
+        }
+        std::cout << std::endl;
+    };
+};
+
+void qbRT::GTform::PrintVector(const qbVector<double> &vector){
+    int nRows = vector.GetNumDims();
+    for(int row = 0; row < nRows; ++row){
+        std::cout << std::fixed << std::setprecision(3) << vector.GetElement(row) << std::endl;
+    }
+}
